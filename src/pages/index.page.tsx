@@ -1,58 +1,144 @@
+import {
+  alterBestBidPriceBitcoin,
+  alterBestBidPriceDogecoin,
+  alterBestBidPriceEthereum,
+  alterBestBidPriceSolana,
+} from "@/core/redux/reducers/bidPriceSlice";
+import { RootState } from "@/core/redux/reducers";
+import { Col, Row, message } from "antd";
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import useWebSocket from "react-use-websocket";
+import { Card } from "@/shared/components/Card";
 
-const url = "wss://stream.binance.com:9443/ws/btcusdt@bookTicker";
-// const url = " wss://testnet.binance.vision/ws/btcusdt@bookTicker";
+enum Binance {
+  BASE_URL = "wss://stream.binance.com:9443",
+  BTCUSDT = "btcusdt@bookTicker",
+  ETHUSDT = "ethusdt@bookTicker",
+  DOGEUSDT = "dogeusdt@bookTicker",
+  SOLUSDT = "solusdt@bookTicker",
+}
+
+const url = `${Binance.BASE_URL}/stream`;
+
+type ResponseWSS = {
+  data: {
+    s: string;
+    u: number;
+    b: string;
+    B: string;
+    a: string;
+    A: string;
+  };
+  stream:
+    | Binance.BTCUSDT
+    | Binance.ETHUSDT
+    | Binance.DOGEUSDT
+    | Binance.SOLUSDT;
+};
+
 export default function Home() {
-  // webSocket("btcusdt@bookTicker").on("message", (data) => {
-  //   console.log(data);
-  // });
-  const [informacaoDaCripto, setInformacaoDaCripto] = React.useState({} as any);
+  const {
+    firstBidBitcoin,
+    bidBitcoin,
+    variationBitcoin,
+    variationPercentageBitcoin,
+    firstBidEthereum,
+    bidEthereum,
+    variationEthereum,
+    variationPercentageEthereum,
+    firstBidSolana,
+    bidSolana,
+    variationSolana,
+    variationPercentageSolana,
+    firstBidDogecoin,
+    bidDogecoin,
+    variationDogecoin,
+    variationPercentageDogecoin,
+  } = useSelector((state: RootState) => state.bidsSlice);
+  const dispatch = useDispatch();
 
-  const { lastJsonMessage, sendMessage } = useWebSocket(url, {
-    onOpen: () => console.log(`Connected to App WS`),
+  const { lastJsonMessage, sendMessage } = useWebSocket<ResponseWSS>(url, {
+    onOpen: () => {
+      sendMessage(
+        JSON.stringify({
+          method: "SUBSCRIBE",
+          params: [
+            Binance.BTCUSDT,
+            Binance.ETHUSDT,
+            Binance.DOGEUSDT,
+            Binance.SOLUSDT,
+          ],
+          id: 1,
+        })
+      );
+    },
     onMessage: () => {
-      if (lastJsonMessage) {
-        console.log(lastJsonMessage);
-        setInformacaoDaCripto(lastJsonMessage);
+      switch (lastJsonMessage?.stream) {
+        case Binance.BTCUSDT:
+          dispatch(alterBestBidPriceBitcoin(Number(lastJsonMessage.data.b)));
+          break;
+        case Binance.ETHUSDT:
+          dispatch(alterBestBidPriceEthereum(Number(lastJsonMessage.data.b)));
+          break;
+        case Binance.DOGEUSDT:
+          dispatch(alterBestBidPriceDogecoin(Number(lastJsonMessage.data.b)));
+          break;
+        case Binance.SOLUSDT:
+          dispatch(alterBestBidPriceSolana(Number(lastJsonMessage.data.b)));
+          break;
       }
     },
     onError: (event) => {
-      console.error(event);
+      message.error("Erro ao comunicar com o servidor");
     },
-    shouldReconnect: (closeEvent) => true,
-    reconnectInterval: 3000,
+    shouldReconnect: (closeEvent) => true, // or `event => true` to reconnect regardless of the event
+    reconnectAttempts: 10, // number of reconnect attempts
+    reconnectInterval: (
+      attemptNumber // time to wait between reconnect attempts
+    ) => Math.min(Math.pow(2, attemptNumber) * 1000, 10000),
   });
-
-  React.useEffect(() => {}, []);
-
-  // socket.on("message", (data) => {
-  //   console.log(data);
-  // });
-
-  // const ws = new WebSocket(BASE_URL + "/ws/btcusdt@bookTicker");
-  // ws.onmessage = function incoming(data) {
-  //   console.log(data);
-  // };
 
   return (
     <>
-      <h1>TIME ALLINTRA</h1>
-
-      <h2>Informações da Cripto</h2>
-      <p>Symbol: {informacaoDaCripto?.s}</p>
-      {/* <p>Price: {informacaoDaCripto?.p}</p>
-      <p>Quantity: {informacaoDaCripto?.q}</p>
-      <p>First Trade ID: {informacaoDaCripto?.f}</p>
-      <p>Last Trade ID: {informacaoDaCripto?.l}</p>
-      <p>Trade Time: {informacaoDaCripto?.T}</p>
-      <p>Is the buyer the market maker? {informacaoDaCripto?.m}</p>
-      <p>Ignore: {informacaoDaCripto?.M}</p> */}
-
-      <p>Best Ask Price: {informacaoDaCripto.a}</p>
-      <p>Best Ask Quantity: {informacaoDaCripto.A}</p>
-      <p>Best Bid Price: {informacaoDaCripto.b}</p>
-      <p>Best Bid Quantity: {informacaoDaCripto.B}</p>
+      <Row gutter={18}>
+        <Col xs={24} sm={24} md={24} lg={6} xl={6} xxl={6}>
+          <Card
+            symbol="Bitcoin / TetherUS"
+            bid={bidBitcoin}
+            firstBid={firstBidBitcoin}
+            variation={variationBitcoin}
+            variationPercentage={variationPercentageBitcoin}
+          />
+        </Col>
+        <Col xs={24} sm={24} md={24} lg={6} xl={6} xxl={6}>
+          <Card
+            symbol="Ethereum / TetherUS"
+            bid={bidEthereum}
+            firstBid={firstBidEthereum}
+            variation={variationEthereum}
+            variationPercentage={variationPercentageEthereum}
+          />
+        </Col>
+        <Col xs={24} sm={24} md={24} lg={6} xl={6} xxl={6}>
+          <Card
+            symbol="Dogecoin / TetherUS"
+            bid={bidDogecoin}
+            firstBid={firstBidDogecoin}
+            variation={variationDogecoin}
+            variationPercentage={variationPercentageDogecoin}
+          />
+        </Col>
+        <Col xs={24} sm={24} md={24} lg={6} xl={6} xxl={6}>
+          <Card
+            symbol="Solana / TetherUS"
+            bid={bidSolana}
+            firstBid={firstBidSolana}
+            variation={variationSolana}
+            variationPercentage={variationPercentageSolana}
+          />
+        </Col>
+      </Row>
     </>
   );
 }
