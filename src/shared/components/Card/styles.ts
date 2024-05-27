@@ -1,5 +1,6 @@
 import React from "react";
 import { Card, CardProps } from "antd";
+import theme from "@/shared/theme";
 import styled from "styled-components";
 
 interface PropsCard extends CardProps {
@@ -7,7 +8,7 @@ interface PropsCard extends CardProps {
 }
 
 function colorize(value: number) {
-  return value < 0 ? "#f23645" : "#089981";
+  return value < 0 ? theme.colors.colorDanger : theme.colors.success;
 }
 
 export const Container = styled(Card).attrs({
@@ -21,47 +22,39 @@ export const Container = styled(Card).attrs({
   },
 } as PropsCard)<PropsCard>`
   box-shadow: 7px 7px 35px rgba(0, 0, 0, 0.15);
-  font-family: "Inter", sans-serif;
 `;
 
 export const Symbol = styled.h3`
-  font-size: 1.5rem;
-  color: #292929;
-  font-family: "Inter", sans-serif;
+  color: ${theme.colors.textColorPrimary};
 `;
 
 export const Bid = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: baseline;
 
   h1 {
-    font-size: 2rem;
-    color: #292929;
-    margin: 0;
-    padding: 0;
+    color: ${theme.colors.textColorPrimary};
   }
 
   ::after {
-    content: " USDT";
-    font-size: 1rem;
-    color: #292929;
+    margin-left: 0.5rem;
+    content: "USDT";
+    font-size: ${theme.fonts.sizes.medium}px;
+    color: ${theme.colors.textColorPrimary};
   }
 `;
 
 export const DiffFirstAndActual = styled.h3`
   color: ${(props) => colorize(Number(props.children))};
-  font-size: 1.5rem;
 `;
 
 export const DiffFirstAndActualPercent = styled.h3`
   color: ${(props) => colorize(Number(props.children))};
-  font-size: 1.5rem;
 
   ::after {
     content: " %";
-    font-size: 1rem;
+    font-size: ${theme.fonts.sizes.large}px;
     color: ${(props) => colorize(Number(props.children))};
   }
 `;

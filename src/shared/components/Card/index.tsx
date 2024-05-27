@@ -40,7 +40,7 @@ export function Card({
       return variation.toFixed(5);
     }
 
-    return variation.toFixed(2);
+    return Number(variation.toFixed(2));
   }
 
   function toFixPercentage() {
@@ -53,7 +53,6 @@ export function Card({
     <Container {...rest}>
       <Symbol>{symbol}</Symbol>
       <Bid>
-        {" "}
         <h1>{formatBid()}</h1>
       </Bid>
       <Content>
