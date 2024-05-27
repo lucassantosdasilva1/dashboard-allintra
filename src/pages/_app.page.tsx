@@ -46,6 +46,12 @@ export default function App({ Component, pageProps }: AppProps) {
             Table: {
               borderRadius: 15,
             },
+            Card: {
+              colorBgBase: theme.colors.background,
+              colorBgContainer: theme.colors.backgroundSecondary,
+
+              colorBorderSecondary: theme.colors.backgroundSecondary,
+            },
           },
         }}
       >

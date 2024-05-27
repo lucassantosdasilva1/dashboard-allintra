@@ -9,15 +9,18 @@ export const Container = styled.div`
   h1 {
     font-size: ${theme.fonts.sizes.extraExtraLarge}px;
     font-family: ${theme.fonts.family.secondary}, sans-serif;
+    font-weight: 800;
   }
 
   h2 {
     font-size: ${theme.fonts.sizes.extraLarge}px;
     font-family: ${theme.fonts.family.secondary}, sans-serif;
+    font-weight: 600;
   }
 
   h3 {
     font-size: ${theme.fonts.sizes.large}px;
     font-family: ${theme.fonts.family.secondary}, sans-serif;
+    font-weight: 600;
   }
 `;

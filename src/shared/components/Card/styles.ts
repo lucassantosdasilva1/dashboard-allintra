@@ -17,11 +17,17 @@ export const Container = styled(Card).attrs({
     flex: 1,
     width: "100%",
     borderRadius: "1rem",
+    marginTop: 10,
     marginBottom: 10,
     padding: 0,
+    transition: "transform 0.3s ease",
   },
 } as PropsCard)<PropsCard>`
   box-shadow: 7px 7px 35px rgba(0, 0, 0, 0.15);
+
+  &:hover {
+    transform: translateY(-10px);
+  }
 `;
 
 export const Symbol = styled.h3`
