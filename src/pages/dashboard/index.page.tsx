@@ -10,34 +10,13 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useWebSocket from "react-use-websocket";
 import { Card } from "@/shared/components/Card";
+import { Binance, ResponseWSS } from "./@types";
 
-enum Binance {
-  BASE_URL = "wss://stream.binance.com:9443",
-  BTCUSDT = "btcusdt@bookTicker",
-  ETHUSDT = "ethusdt@bookTicker",
-  DOGEUSDT = "dogeusdt@bookTicker",
-  SOLUSDT = "solusdt@bookTicker",
-}
+const BASE_URL = process.env.NEXT_PUBLIC_URL;
 
-const url = `${Binance.BASE_URL}/stream`;
+const url = `${BASE_URL}/stream`;
 
-type ResponseWSS = {
-  data: {
-    s: string;
-    u: number;
-    b: string;
-    B: string;
-    a: string;
-    A: string;
-  };
-  stream:
-    | Binance.BTCUSDT
-    | Binance.ETHUSDT
-    | Binance.DOGEUSDT
-    | Binance.SOLUSDT;
-};
-
-export default function Home() {
+export default function Dashboard() {
   const {
     firstBidBitcoin,
     bidBitcoin,

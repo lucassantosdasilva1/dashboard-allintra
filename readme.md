@@ -39,6 +39,7 @@ Projeto desenvolvido durante a avaliação para o teste de Desenvolvedor React S
 ---
 
 ## 🚀 Como executar o projeto
+ - #### Renomeie o .env.example para .env.local e adicione a url do WebSocket da binance (eu utilizei o wss://stream.binance.com:9443)
 
 ### Pré-requisitos para rodar com 🐳 **Docker**:
   - #### ⚠️ Certifique-se de ter o  🐳 **Docker** instalado em sua maquina
