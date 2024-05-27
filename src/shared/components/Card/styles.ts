@@ -50,6 +50,7 @@ export const DiffFirstAndActual = styled.h3`
 `;
 
 export const DiffFirstAndActualPercent = styled.h3`
+  margin-left: 0.5rem;
   color: ${(props) => colorize(Number(props.children))};
 
   ::after {
